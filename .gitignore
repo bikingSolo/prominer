@@ -1,0 +1,9 @@
+*pycache*
+*.csv
+*.ipynb_checkpoints
+*.DS_Store
+*.vscode
+.agents
+.codex
+*.tsv
+*.parquet
