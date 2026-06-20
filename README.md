@@ -109,7 +109,7 @@ Russian-track results:
 | Fine-tuned BERGAMOT retriever | 0.6980 | 0.8375 | 0.7573 |
 | Reranker, BCE, no dictionary pretraining | 0.6939 | 0.8166 | 0.7441 |
 | Reranker, BCE, dictionary pretraining | 0.7167 | 0.8215 | 0.7608 |
-| Reranker, LambdaLoss, dictionary pretraining | 0.7326 | 0.8408 | 0.7784 |
+| Reranker, LambdaLoss, dictionary pretraining | 0.7340 | 0.8426 | 0.7796 |
 
 Russian-track comparison with other submitted systems. The participant results are taken from the [CodaLab leaderboard](https://codalab.lisn.upsaclay.fr/competitions/21568#results) and the BioNNE-L overview paper [[3]](#ref-3).
 
@@ -124,6 +124,31 @@ ProMiNER was developed after the shared task had ended and was not an official c
 | EeyoreLee | 0.650 | 0.740 | 0.690 | SapBERT |
 | AntoineI | 0.620 | 0.720 | 0.670 | bert-base-russian-upos, BioSyn |
 | BERGAMOT baseline | 0.520 | 0.590 | 0.550 | BERGAMOT |
+
+## Checkpoint Result Reproducibility
+
+The repository includes lightweight evaluation scripts for checking the released Hugging Face checkpoints on the included development and test splits. They reuse the shared `lib/` retrieval, reranking, cache, and metric helpers used by the notebooks.
+
+Dense retriever only:
+
+```bash
+python scripts/evaluate_retriever.py --dataset ru
+```
+
+Dense retriever plus cross-encoder reranker:
+
+```bash
+python scripts/evaluate_reranker.py --dataset ru
+```
+
+By default, the scripts use the Russian checkpoints from Hugging Face:
+
+- `bikingSolo/prominer-ru-retriever`
+- `bikingSolo/prominer-ru-reranker`
+
+Local checkpoints can be evaluated by passing `--retriever-model` and, for reranking, `--reranker-model`. The scripts print a dev/test metrics table and save it under `artifacts_checkpoint_eval/<dataset>/<mode>/metrics_summary.tsv`. Use `--save-predictions` to also write prediction TSV files.
+
+The reranker script builds persistent dense-retriever candidate caches under `artifacts_checkpoint_eval/<dataset>/reranker/retriever_cache/`. The first run may take longer because it downloads checkpoints, prepares candidate-context profiles, and builds retriever caches; later runs reuse compatible caches unless `--force-rebuild-cache` is passed.
 
 ## Environment
 
