@@ -101,7 +101,7 @@ Russian-track comparison with other submitted systems. The participant results a
 
 | Participant | Acc@1 | Acc@5 | MRR | Base model |
 |---|---:|---:|---:|---|
-| **This system** | **0.733** | **0.841** | **0.778** | BERGAMOT |
+| **This system** | **0.734** | **0.843** | **0.780** | BERGAMOT |
 | BlancaPlanca | 0.716 | 0.828 | 0.761 | BERGAMOT |
 | droidlyx86 | 0.710 | 0.840 | 0.760 | BERGAMOT |
 | dstepakov | 0.700 | 0.760 | 0.720 | RoBERTa |
