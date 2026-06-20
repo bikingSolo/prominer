@@ -99,6 +99,8 @@ Russian-track results:
 
 Russian-track comparison with other submitted systems. The participant results are taken from the [CodaLab leaderboard](https://codalab.lisn.upsaclay.fr/competitions/21568#results) and the BioNNE-L overview paper [[3]](#ref-3).
 
+ProMiNER was developed after the shared task had ended and was not an official competition submission.
+
 | Participant | Acc@1 | Acc@5 | MRR | Base model |
 |---|---:|---:|---:|---|
 | **This system** | **0.734** | **0.843** | **0.780** | BERGAMOT |
