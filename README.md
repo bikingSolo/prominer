@@ -1,3 +1,5 @@
+[![Hugging Face](https://img.shields.io/badge/🤗-Hugging%20Face-yellow)](https://huggingface.co/collections/bikingSolo/prominer)
+
 # ProMiNER: Profile-Based Medical Named Entity Reranker for BioNNE-L 2025
 
 ProMiNER (Profile-Based Medical Named Entity Reranker) is a BioNNE-L shared-task system for linking biomedical mentions to UMLS concepts. The project is built on the NEREL-BIO dataset and its entity-linking extension [[1](#ref-1), [2](#ref-2)] and focuses on the Russian track, where the final system combines a dense retriever, dictionary-based cross-encoder pretraining, and cross-encoder reranking over compact candidate-context profiles.
@@ -8,16 +10,26 @@ Resources:
 - [BioNNE-L shared task](https://github.com/nerel-ds/NEREL-BIO/tree/master/BioNNE-L_Shared_Task)
 - [CodaLab competition](https://codalab.lisn.upsaclay.fr/competitions/21568#participate)
 
+## Hugging Face Models
+
+The three ProMiNER Russian-track checkpoints are available on Hugging Face Hub:
+
+| Model | Role | Received from
+|---|---|---|
+[`bikingSolo/prominer-ru-retriever`](https://huggingface.co/bikingSolo/prominer-ru-retriever) | Dense candidate retrieval | [bionnel-dense-finetuning.ipynb](bionnel-dense-finetuning.ipynb) |
+[`bikingSolo/prominer-ru-pretrained-cross-encoder`](https://huggingface.co/bikingSolo/prominer-ru-pretrained-cross-encoder) | Intermediate cross-encoder checkpoint pretrained on dictionary pseudo-pairs | [bionnel-cross-encoder-dictionary-pretrain.ipynb](bionnel-cross-encoder-dictionary-pretrain.ipynb) |
+[`bikingSolo/prominer-ru-reranker`](https://huggingface.co/bikingSolo/prominer-ru-reranker) | Final reranker | [bionnel-cross-encoder-reranking.ipynb](bionnel-cross-encoder-reranking.ipynb) |
+
 ## Experiment Entry Points
 
 The root notebooks are the primary entry points:
 
-1. `bionnel-dense-only.ipynb` - zero-shot dense retrieval with Sentence Transformers. This is the simplest baseline and evaluates whether the pretrained embedding model can link mentions directly to vocabulary names.
-2. `bionnel-hybrid-bm25.ipynb` - late fusion of dense retrieval and BM25 lexical retrieval.
-3. `bionnel-hybrid-char-tfidf.ipynb` - late fusion of dense retrieval and character TF-IDF retrieval.
-4. `bionnel-dense-finetuning.ipynb` - dense retriever fine-tuning on mention-to-concept positive pairs, with optional hard-negative mining.
-5. `bionnel-cross-encoder-dictionary-pretrain.ipynb` - dictionary-based cross-encoder pretraining. The notebook turns vocabulary synonyms into pseudo-query/candidate pairs, prepares dense-retriever candidate pools, and trains the cross-encoder to compare mentions with compact candidate-context profiles before task-specific reranking.
-6. `bionnel-cross-encoder-reranking.ipynb` - final cross-encoder reranking over candidates from the fine-tuned dense retriever. The notebook builds train/dev/test retriever caches, creates cross-encoder training pairs, evaluates model checkpoints on dev, and writes final prediction files.
+1. [bionnel-dense-only.ipynb](bionnel-dense-only.ipynb) - zero-shot dense retrieval with Sentence Transformers. This is the simplest baseline and evaluates whether the pretrained embedding model can link mentions directly to vocabulary names.
+2. [bionnel-hybrid-bm25.ipynb](bionnel-hybrid-bm25.ipynb) - late fusion of dense retrieval and BM25 lexical retrieval.
+3. [bionnel-hybrid-char-tfidf.ipynb](bionnel-hybrid-char-tfidf.ipynb) - late fusion of dense retrieval and character TF-IDF retrieval.
+4. [bionnel-dense-finetuning.ipynb](bionnel-dense-finetuning.ipynb) - dense retriever fine-tuning on mention-to-concept positive pairs, with optional hard-negative mining.
+5. [bionnel-cross-encoder-dictionary-pretrain.ipynb](bionnel-cross-encoder-dictionary-pretrain.ipynb) - dictionary-based cross-encoder pretraining. The notebook turns vocabulary synonyms into pseudo-query/candidate pairs, prepares dense-retriever candidate pools, and trains the cross-encoder to compare mentions with compact candidate-context profiles before task-specific reranking.
+6. [bionnel-cross-encoder-reranking.ipynb](bionnel-cross-encoder-reranking.ipynb) - final cross-encoder reranking over candidates from the fine-tuned dense retriever. The notebook builds train/dev/test retriever caches, creates cross-encoder training pairs, evaluates model checkpoints on dev, and writes final prediction files.
 
 The two cross-encoder notebooks also build compact candidate-context profiles. Instead of scoring a mention against a single dictionary string, each CUI is represented by a short heuristic profile assembled from the representative name and useful aliases. For example, instead of a single dictionary row:
 
@@ -37,11 +49,13 @@ Dictionary pretraining is used specifically to teach the cross-encoder how to in
 
 To reproduce the best Russian-track system, run the notebooks in this order:
 
-1. `bionnel-dense-finetuning.ipynb` - preprocess mention and vocabulary text, then fine-tune the dense BERGAMOT retriever on task-specific mention-to-concept pairs.
-2. `bionnel-cross-encoder-dictionary-pretrain.ipynb` - build candidate-context profiles and pretrain the cross-encoder on dictionary-derived pseudo-query/candidate pairs.
-3. `bionnel-cross-encoder-reranking.ipynb` - fine-tune the final reranker on candidates produced by the fine-tuned retriever, initializing the cross-encoder from the dictionary-pretrained checkpoint.
+1. [bionnel-dense-finetuning.ipynb](bionnel-dense-finetuning.ipynb) - preprocess mention and vocabulary text, then fine-tune the dense BERGAMOT retriever on task-specific mention-to-concept pairs.
+2. [bionnel-cross-encoder-dictionary-pretrain.ipynb](bionnel-cross-encoder-dictionary-pretrain.ipynb) - build candidate-context profiles and pretrain the cross-encoder on dictionary-derived pseudo-query/candidate pairs.
+3. [bionnel-cross-encoder-reranking.ipynb](bionnel-cross-encoder-reranking.ipynb) - fine-tune the final reranker on candidates produced by the fine-tuned retriever, initializing the cross-encoder from the dictionary-pretrained checkpoint.
 
 This separates the two main learning problems: the retriever learns to recall strong candidate pools, while dictionary pretraining helps the cross-encoder understand the enriched candidate representation that is later used for supervised reranking.
+
+> **Evaluation protocol.** At each stage, model and checkpoint selection was based only on the development split and its evaluation metrics. The test split was not used for model selection, hyperparameter tuning, or intermediate decisions. It was kept untouched until the final selected system was evaluated, so the reported test results were not tuned against the test set.
 
 The notebooks currently contain the hyperparameter values used to obtain the results reported below.
 
