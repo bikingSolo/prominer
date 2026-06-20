@@ -1,11 +1,12 @@
 # ProMiNER: Profile-Based Medical Named Entity Reranker for BioNNE-L 2025
 
-ProMiNER (Profile-Based Medical Named Entity Reranker) is a BioNNE-L shared-task system for nested biomedical entity linking. The main focus is the Russian track, where the final system combines a dense retriever, dictionary-based cross-encoder pretraining, and cross-encoder reranking over compact candidate-context profiles.
+ProMiNER (Profile-Based Medical Named Entity Reranker) is a BioNNE-L shared-task system for linking biomedical mentions to UMLS concepts. The project is built on the NEREL-BIO dataset and its entity-linking extension [[1](#ref-1), [2](#ref-2)] and focuses on the Russian track, where the final system combines a dense retriever, dictionary-based cross-encoder pretraining, and cross-encoder reranking over compact candidate-context profiles.
 
-BioNNE-L resources:
+Resources:
 
-- Shared-task repository: <https://github.com/nerel-ds/NEREL-BIO/tree/master/BioNNE-L_Shared_Task>
-- CodaLab competition: <https://codalab.lisn.upsaclay.fr/competitions/21568#participate>
+- [NEREL-BIO dataset repository](https://github.com/nerel-ds/NEREL-BIO/tree/master)
+- [BioNNE-L shared task](https://github.com/nerel-ds/NEREL-BIO/tree/master/BioNNE-L_Shared_Task)
+- [CodaLab competition](https://codalab.lisn.upsaclay.fr/competitions/21568#participate)
 
 ## Experiment Entry Points
 
@@ -59,7 +60,9 @@ Supporting code lives under `lib/`:
 
 ## Data
 
-Data files are not included in this public version. Please obtain the publicly available BioNNE-L data from the shared-task repository and arrange it locally under the layout expected by the notebooks:
+The BioNNE-L data used by the notebooks is included in this repository. The data comes from the [BioNNE-L shared task](https://github.com/nerel-ds/NEREL-BIO/tree/master/BioNNE-L_Shared_Task), which is hosted in the [NEREL-BIO repository](https://github.com/nerel-ds/NEREL-BIO/tree/master) [[1](#ref-1), [2](#ref-2)].
+
+The files are arranged as follows:
 
 ```text
 data/
@@ -78,7 +81,7 @@ data/
     bionnel_vocab_bilingual.parquet
 ```
 
-The test split is intentionally not redistributed in this repository version. Some notebooks include test-prediction and evaluation cells from the original experimental workflow; those cells require locally available test data and labels.
+The test collection is shared with references to the official [CodaLab evaluation page](https://codalab.lisn.upsaclay.fr/competitions/21568#participate) and the BioNNE-L overview paper [[3]](#ref-3).
 
 ## Results
 
@@ -94,7 +97,7 @@ Russian-track results:
 | Reranker, BCE, dictionary pretraining | 0.7167 | 0.8215 | 0.7608 |
 | Reranker, LambdaLoss, dictionary pretraining | 0.7326 | 0.8408 | 0.7784 |
 
-Russian-track comparison with other submitted systems:
+Russian-track comparison with other submitted systems. The participant results are taken from the [CodaLab leaderboard](https://codalab.lisn.upsaclay.fr/competitions/21568#results) and the BioNNE-L overview paper [[3]](#ref-3).
 
 | Participant | Acc@1 | Acc@5 | MRR | Base model |
 |---|---:|---:|---:|---|
@@ -108,6 +111,18 @@ Russian-track comparison with other submitted systems:
 
 ## Environment
 
-The notebooks use PyTorch, Sentence Transformers, Transformers, Datasets, pandas, NumPy, scikit-learn, tqdm, and MLflow. A typical workflow is to create a Python environment with GPU-enabled PyTorch, install the remaining Python dependencies, download the BioNNE-L data, and then run the notebooks in the order listed above.
+The notebooks use PyTorch, Sentence Transformers, Transformers, Datasets, pandas, NumPy, scikit-learn, tqdm, and MLflow. Use `mlflow<3.6.0`: the notebooks are written for MLflow's file-based local tracking backend, while newer MLflow versions migrate local tracking to SQLite.
+
+A typical workflow is to create a Python environment with GPU-enabled PyTorch, install the remaining Python dependencies, prepare the BioNNE-L data under the expected layout, and then run the notebooks in the order listed above.
 
 Large local outputs such as MLflow runs, model checkpoints, generated predictions, and candidate caches are intentionally excluded from the public repository.
+
+## References
+
+This repository uses the NEREL-BIO dataset, its entity-linking extension, and the BioNNE-L test collection described in the following works:
+
+<a id="ref-1"></a>[1] Loukachevitch N. et al. NEREL-BIO: a dataset of biomedical abstracts annotated with nested named entities // Bioinformatics. 2023. Vol. 39. No. 4. P. btad161.
+
+<a id="ref-2"></a>[2] Loukachevitch N., Sakhovskiy A., Tutubalina E. Biomedical concept normalization over nested entities with partial UMLS terminology in Russian // Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024). 2024. P. 2383-2389.
+
+<a id="ref-3"></a>[3] Sakhovskiy A., Loukachevitch N., Tutubalina E. Overview of the BioASQ BioNNE-L task on biomedical nested entity linking in CLEF 2025 // CLEF. 2025.
