@@ -158,6 +158,24 @@ A typical workflow is to create a Python environment with GPU-enabled PyTorch, i
 
 Large local outputs such as MLflow runs, model checkpoints, generated predictions, and candidate caches are intentionally excluded from the public repository.
 
+
+## Citation
+
+If you use ProMiNER in your research, please cite our paper:
+
+**Lev Borisovskii, Natalia V. Loukachevitch.**  
+*ProMiNER: Profile-Based Medical Named Entity Reranker for Russian Medical Concept Normalization.*  
+Accepted for publication in Springer Studies in Computational Intelligence (Neuroinformatics 2026).
+
+```bibtex
+@unpublished{borisovskii2026prominer,
+  title  = {ProMiNER: Profile-Based Medical Named Entity Reranker for Russian Medical Concept Normalization},
+  author = {Borisovskii, Lev and Loukachevitch, Natalia V.},
+  year   = {2026},
+  note   = {Accepted for publication in Springer Studies in Computational Intelligence (Neuroinformatics 2026)}
+}
+```
+
 ## References
 
 This repository uses the NEREL-BIO dataset, its entity-linking extension, and the BioNNE-L test collection described in the following works:
